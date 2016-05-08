@@ -14,6 +14,14 @@ class Prueba():
 	
 	NumeroPrueba =  property(GetNumber, SetNumber)			
 	
+	def NPruebas (self, Iteraciones ):
+		i = 0
+		while( i < Iteraciones ):	
+			print "Probando" 
+			i = i + 1
+
 	### script principal ###
 p1 = Prueba()
-print( p1.GetNumber() )
+print( p1.NumeroPrueba ) 
+p1.NPruebas(8)
+
