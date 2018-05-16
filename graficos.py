@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import math as mat
 import numpy as num
+import funcion
 
 def graph_Escalon(x):
     r = ["Funcion Escalon Discreta y Continua"]
@@ -27,14 +28,14 @@ def graph_Impulso(x):
 def graph_Exponencial(x):
     a = float(raw_input("\tFuncion Exponencial [e^(at)]\n\t\tEscriba el valor de [a] "))
     r = ['Funcion Exponencial Discreta y Continua']
-    y = [ a * mat.exp(xs) for xs in x ]
+    y = [ mat.exp(a*xs) for xs in x ]
     r.append(y)
     return r
 
 def graph_Senoidal(x):
     print("\tFuncion Senoidal [A0 * Sen(wt + o)]")
 
-    a0  = float(raw_input("\t\t\tEscriba el valor de [a0] "))
+    a0  = float(raw_input("\t\t\tEscriba el valor de [A0] "))
     omg = float(raw_input("\t\t\tEscriba el valor de [w]  "))
     fi  = float(raw_input("\t\t\tEscriba el valor de [fi] "))
 
@@ -46,7 +47,7 @@ def graph_Senoidal(x):
 def graph_Cosenoidal(x):
     print("\tFuncion Cosenoidal [A0 * Cos(wt + o)]")
 
-    a0  = float(raw_input("\t\t\tEscriba el valor de [a0] "))
+    a0  = float(raw_input("\t\t\tEscriba el valor de [A0] "))
     omg = float(raw_input("\t\t\tEscriba el valor de [w]  "))
     fi  = float(raw_input("\t\t\tEscriba el valor de [fi] "))
 
@@ -75,6 +76,10 @@ def desplegar_Menu ():
     print "\t[4] Funcion Senoidal"
     print "\t[5] Funcion Cosenoidal"
     print "\t[6] Funcion Coseno Exponencial"
+    print "\t[7] Operaciones entre funcones"
+
+
+    print "\t[0] Salir"
 
     return int( raw_input("\t->") )
 
@@ -88,47 +93,56 @@ def preparar_Rango ():
     return y
 
 def prepararGrafico(x):
-    r = 0; y = 0; k = desplegar_Menu()
+    while True:
+        r = 0; y = 0; k = desplegar_Menu()
+        if k == 1 :
+            r,y = graph_Escalon(x)
 
-    if k == 1 :
-        r,y = graph_Escalon(x)
+        elif k == 2:
+            r,y = graph_Impulso(x)
 
-    elif k == 2:
-        r,y = graph_Impulso(x)
+        elif k == 3:
+            r,y = graph_Exponencial(x)
 
-    elif k == 3:
-        r,y = graph_Exponencial(x)
+        elif k == 4:
+            r,y = graph_Senoidal(x)
 
-    elif k == 4:
-        r,y = graph_Senoidal(x)
+        elif k == 5:
+            r,y = graph_Cosenoidal(x)
 
-    elif k == 5:
-        r,y = graph_Cosenoidal(x)
+        elif k == 6:
+            r,y = graph_CosenoExponencial(x)
+        elif k == 7:
+            s = raw_input("\t\tEscriba las funciones a operar ")
+            f = funcion.Funcion([0,1,.1], s, 'operacion')
+            r,y = f.reevaluar_Rango(x)
 
-    elif k == 6:
-        r,y = graph_CosenoExponencial(x)
+        elif k == 0:
+            return
 
-    print('\tGraficando..... ')
+        print('\tGraficando..... ')
 
-    plt.subplot(2,1,1)
-    plt.title(r)
-    plt.grid(True)
-    plt.ylabel('s')
-    plt.xlabel('t')
-    plt.stem(x,y,'r')
-    plt.plot(x,y)
 
-    plt.subplot(2,1,2)
-    plt.grid(True)
-    plt.ylabel('s')
-    plt.xlabel('t')
-    plt.plot(x,y)
+        plt.subplot(2,1,1)
+        plt.title(r)
+        plt.grid(True)
+        plt.ylabel('s')
+        plt.xlabel('t')
+        plt.stem(x,y,'r')
+        plt.plot(x,y)
+
+        plt.subplot(2,1,2)
+        plt.grid(True)
+        plt.ylabel('s')
+        plt.xlabel('t')
+        plt.plot(x,y)
+        plt.show()
 
 
 def main ():
     a, b, c = preparar_Rango()
     x = num.arange(a,b,c)
     prepararGrafico(x)
-    plt.show()
+
 
 main()
