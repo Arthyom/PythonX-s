@@ -7,7 +7,6 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
-import funcion
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -23,12 +22,7 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_MainWindow(QtGui.QWidget):
-
-    def __init(self):
-        super(Ui_MainWindow,self).__init__()
-        self.setupUi(Ui_MainWindow)
-
+class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(1058, 544)
@@ -180,13 +174,6 @@ class Ui_MainWindow(QtGui.QWidget):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        self.coleccion_Funciones=[]
-
-        ### conectar el boton con el slot
-        self.btn_AddFun.clicked.connect(self.agregar_Funcion)
-
-
-
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "Graficador", None))
         self.groupBox.setTitle(_translate("MainWindow", "Panel de Entrada", None))
@@ -215,30 +202,6 @@ class Ui_MainWindow(QtGui.QWidget):
         self.pushButton_6.setText(_translate("MainWindow", "+", None))
         self.pushButton_7.setText(_translate("MainWindow", "+", None))
 
-    ##agregar una nueva funcion a la lista de funciones"""
-    def agregar_Funcion(self):
-
-        ### conseguir los valores del rango
-        c = abs( self.spn_Init.value()-(self.spn_To.value()+1)/float(self.spn_Muestras.value()) )
-        rango = [self.spn_Init.value(),self.spn_To.value()+1, c]
-        idntf = str( self.txt_funcionEntrada.text())
-
-        fn = funcion.Funcion(rango,idntf,idntf)
-
-        ### agregar la funcion a la coleccion_Funciones
-        self.coleccion_Funciones.append(fn)
-        self.agregar_Funcion_Combo(fn)
-
-
-    def agregar_Funcion_Combo (self, funcionNueva ):
-        self.cmb_F1.addItem(funcionNueva.funcion_Texto)
-        self.cmb_F2.addItem(funcionNueva.funcion_Texto)
-        self.cmb_Inc.addItem(funcionNueva.funcion_Texto)
-        self.cmb_Corr.addItem(funcionNueva.funcion_Texto)
-        self.cmb_Inv.addItem(funcionNueva.funcion_Texto)
-        self.comboBox_7.addItem(funcionNueva.funcion_Texto)
-
-
 
 if __name__ == "__main__":
     import sys
@@ -248,3 +211,4 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
+
