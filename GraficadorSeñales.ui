@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1058</width>
-    <height>544</height>
+    <width>1198</width>
+    <height>643</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>670</x>
+      <x>810</x>
       <y>0</y>
       <width>391</width>
       <height>111</height>
@@ -45,7 +45,8 @@
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Introduzca Una nueva funcion&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(255, 255, 255);</string>
+      <string notr="true">background-color: rgb(255, 255, 255);
+selection-background-color: rgb(231, 77, 0);</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_2">
@@ -185,8 +186,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>671</width>
-      <height>541</height>
+      <width>811</width>
+      <height>641</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -195,11 +196,14 @@
     <property name="text">
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QGroupBox" name="groupBox_2">
     <property name="geometry">
      <rect>
-      <x>670</x>
+      <x>810</x>
       <y>230</y>
       <width>391</width>
       <height>61</height>
@@ -240,14 +244,15 @@
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(255, 255, 255);</string>
+      <string notr="true">background-color: rgb(255, 255, 255);
+selection-background-color: rgb(231, 77, 0);</string>
      </property>
     </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_3">
     <property name="geometry">
      <rect>
-      <x>670</x>
+      <x>810</x>
       <y>170</y>
       <width>391</width>
       <height>61</height>
@@ -288,7 +293,8 @@
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(255, 255, 255);</string>
+      <string notr="true">background-color: rgb(255, 255, 255);
+selection-background-color: rgb(231, 77, 0);</string>
      </property>
      <property name="frame">
       <bool>true</bool>
@@ -298,7 +304,7 @@
    <widget class="QGroupBox" name="groupBox_4">
     <property name="geometry">
      <rect>
-      <x>670</x>
+      <x>810</x>
       <y>110</y>
       <width>391</width>
       <height>61</height>
@@ -342,14 +348,15 @@
       <string>Selecciones incremento</string>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(255, 255, 255);</string>
+      <string notr="true">background-color: rgb(255, 255, 255);
+selection-background-color: rgb(231, 77, 0);</string>
      </property>
     </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_5">
     <property name="geometry">
      <rect>
-      <x>670</x>
+      <x>810</x>
       <y>290</y>
       <width>391</width>
       <height>121</height>
@@ -371,7 +378,8 @@
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(255, 255, 255);</string>
+      <string notr="true">background-color: rgb(255, 255, 255);
+selection-background-color: rgb(231, 77, 0);</string>
      </property>
     </widget>
     <widget class="QComboBox" name="cmb_F2">
@@ -384,7 +392,8 @@
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(255, 255, 255);</string>
+      <string notr="true">background-color: rgb(255, 255, 255);
+selection-background-color: rgb(231, 77, 0);</string>
      </property>
     </widget>
     <widget class="QComboBox" name="cmb_Opr">
@@ -447,7 +456,7 @@ selection-background-color: rgb(221, 73, 0);
    <widget class="QGroupBox" name="groupBox_6">
     <property name="geometry">
      <rect>
-      <x>670</x>
+      <x>810</x>
       <y>410</y>
       <width>391</width>
       <height>131</height>
@@ -469,7 +478,8 @@ selection-background-color: rgb(221, 73, 0);
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(255, 255, 255);</string>
+      <string notr="true">background-color: rgb(255, 255, 255);
+selection-background-color: rgb(231, 77, 0);</string>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_3">

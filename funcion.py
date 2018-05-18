@@ -27,12 +27,23 @@ class Funcion:
     def imprimir_Dominio (self):
         print(self.dominio)
 
-    def graficar         (self, tipo='d'):
+    def graficar         (self, name, tipo='d'):
+
         if tipo == 'd':
-            plt.stem(self.rango, self.dominio)
+            markerline, stemlines, baseline = plt.stem(self.rango, self.dominio,markerfmt='o',label=self.funcion_Texto)
+            plt.legend()
+            plt.setp(stemlines, 'color', plt.getp(markerline,'color'))
         else:
             plt.plot(self.rango, self.dominio)
-        plt.show()
+
+        plt.savefig(name+'.png')
+
+
+        return name+'.png'
+
+    def limpiar          (self):
+        plt.clf()
+
 
     ### funciones con tipo de retorno
     #### crea una nueva funcion corrida y la regresa
@@ -90,6 +101,6 @@ class Funcion:
         nuevo_Dominio = []
         f3 = Funcion( self.vals_Rango, self.funcion_Texto + " * " +f2.funcion_Texto, "multiplicacion de funciones")
         for f1,f2 in zip(self.dominio, f2.dominio):
-            nuevo_Dominio.append(f1-f2)
+            nuevo_Dominio.append(f1*f2)
         f3.dominio = nuevo_Dominio
         return f3
