@@ -34,7 +34,7 @@ class Funcion:
     def imprimir_Dominio (self):
         print(self.dominio)
 
-    def graficar         (self, name, tipo='d'):
+    def graficar         (self, name='graficaPrincipal', tipo='d'):
         plt.grid(True)
         if tipo == 'd':
             markerline, stemlines, baseline = plt.stem(self.rango, self.dominio,markerfmt='o',label=self.funcion_Texto)
@@ -82,14 +82,14 @@ class Funcion:
         fn.dominio = nuevo_Dominio
         return fn
 
-    def inversion        (self):
+    def inversion        (self, t0):
         nuevo_Dominio = []
         ### crea una nueva funcion a partir de la funcion actual
         fn = Funcion(self.vals_Rango, self.funcion_Texto, self.funcion_Texto + " corrimiento "  )
 
         ### iterar para cada valor ti en T
         for ti in fn.rango :
-            nuevo_Dominio.append( self.funcion_Objeto.subs(self.x,-1*ti) )
+            nuevo_Dominio.append( self.funcion_Objeto.subs(self.x,t0*-1*ti) )
         fn.dominio = nuevo_Dominio
         return fn
 

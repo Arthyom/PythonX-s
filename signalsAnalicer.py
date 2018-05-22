@@ -233,6 +233,8 @@ class Ui_MainWindow(QtGui.QWidget):
         self.spn_Corri.valueChanged.connect(self.slot_SpinCorrimiento)
         self.spn_Inc.valueChanged.connect(self.slot_SpinEscalamiento)
         self.spn_Inv.valueChanged.connect(self.slot_SpinInvercion)
+        self.comboBox.activated.connect(self.slot_SeleccionarSignal)
+        self.rd_Todas.clicked.connect(self.graficar_Todas)
 
 
 
@@ -267,6 +269,14 @@ class Ui_MainWindow(QtGui.QWidget):
         self.pushButton_5.setText(_translate("MainWindow", "+", None))
         self.pushButton_6.setText(_translate("MainWindow", "+", None))
         self.pushButton_7.setText(_translate("MainWindow", "+", None))
+
+    ## ejecutar slot cuando una funcion sea seleccionada
+    def slot_SeleccionarSignal(self):
+        ### graficar solo la funcion seleccionada
+        plt.clf()
+        if ( self.rd_Actual.isChecked() ):
+            fn = self.buscar_FuncionComoTexto(self.comboBox.currentText())
+            self.graficar_FuncionSeleccionada( fn )
 
 
     def remover_Funcion(self):
@@ -313,7 +323,7 @@ class Ui_MainWindow(QtGui.QWidget):
         t0 = self.spn_Inv.value()
         txt_fn = str(self.cmb_Inv.currentText())
         fn = self.buscar_FuncionComoTexto(txt_fn)
-        f3 = fn.inversion()
+        f3 = fn.inversion(t0)
 
         self.funcion_Resultado(f3)
 
@@ -338,6 +348,16 @@ class Ui_MainWindow(QtGui.QWidget):
         #fn.graficar()
         q = QtGui.QPixmap.fromImage(QtGui.QImage(fn.graficar('graficaPrincipal')))
         self.label_6.setPixmap(q.scaled(self.label_6.width(), self.label_6.height(),QtCore.Qt.KeepAspectRatio))
+
+    def graficar_FuncionSeleccionada(self, fn):
+        q = QtGui.QPixmap.fromImage(QtGui.QImage(fn.graficar('graficaPrincipal')))
+        self.label_6.setPixmap(q.scaled(self.label_6.width(), self.label_6.height(),QtCore.Qt.KeepAspectRatio))
+
+    def graficar_Todas(self):
+        plt.clf()
+        for fn in self.coleccion_Funciones:
+            self.graficar_FuncionSeleccionada(fn)
+
 
     ## aregar una nueva funcion a los combos y graficarlos
     def funcion_Resultado(self,fn):
