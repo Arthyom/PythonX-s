@@ -111,7 +111,7 @@ selection-background-color: rgb(231, 77, 0);</string>
       </rect>
      </property>
      <property name="text">
-      <string>Pasos</string>
+      <string>Incremento</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -191,7 +191,8 @@ selection-background-color: rgb(231, 77, 0);</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(255, 255, 255);</string>
+      <string notr="true">background-color: rgb(255, 255, 255);
+selection-background-color: rgb(206, 68, 0);</string>
      </property>
     </widget>
     <widget class="QRadioButton" name="rd_Actual">
@@ -573,31 +574,17 @@ selection-background-color: rgb(221, 73, 0);
     <property name="title">
      <string>Opciones</string>
     </property>
-    <widget class="QComboBox" name="comboBox_7">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>70</y>
-       <width>371</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgb(255, 255, 255);
-selection-background-color: rgb(231, 77, 0);</string>
-     </property>
-    </widget>
     <widget class="QPushButton" name="pushButton_3">
      <property name="geometry">
       <rect>
        <x>20</x>
        <y>20</y>
        <width>71</width>
-       <height>41</height>
+       <height>81</height>
       </rect>
      </property>
      <property name="text">
-      <string>+</string>
+      <string>Sava all</string>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_4">
@@ -606,11 +593,11 @@ selection-background-color: rgb(231, 77, 0);</string>
        <x>90</x>
        <y>20</y>
        <width>71</width>
-       <height>41</height>
+       <height>81</height>
       </rect>
      </property>
      <property name="text">
-      <string>+</string>
+      <string>Save act</string>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_5">
@@ -619,11 +606,11 @@ selection-background-color: rgb(231, 77, 0);</string>
        <x>160</x>
        <y>20</y>
        <width>71</width>
-       <height>41</height>
+       <height>81</height>
       </rect>
      </property>
      <property name="text">
-      <string>+</string>
+      <string>Save each</string>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_6">
@@ -632,11 +619,11 @@ selection-background-color: rgb(231, 77, 0);</string>
        <x>230</x>
        <y>20</y>
        <width>71</width>
-       <height>41</height>
+       <height>81</height>
       </rect>
      </property>
      <property name="text">
-      <string>+</string>
+      <string>Del. Grph</string>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_7">
@@ -645,11 +632,11 @@ selection-background-color: rgb(231, 77, 0);</string>
        <x>300</x>
        <y>20</y>
        <width>71</width>
-       <height>41</height>
+       <height>81</height>
       </rect>
      </property>
      <property name="text">
-      <string>+</string>
+      <string>Clean</string>
      </property>
     </widget>
    </widget>
