@@ -13,16 +13,29 @@ class Funcion:
         self.nombre         = identificador
         self.funcion_Objeto = sympify(funcion_Texto)
         self.rango          = arange(rango[0],rango[1],rango[2])
+        self.dominio        = []
 
-        if( funcion_Texto != 'Esc_Esp' and  funcion_Texto !='Imp_Esc'):
+        if( funcion_Texto != 'Esc_Esp' and  funcion_Texto !='Imp_Esp'):
             ### evaluar la funcion en todos los puntos del rango_X
             f                   = lambdify( self.t, self.funcion_Objeto, 'numpy' )
             self.dominio        = f(self.rango)
-        elif( funcion_Texto != 'Esc_Esp' ):
-            self.dominio = piecewise(self.t, [self.t,self.t],[rango[0], rango[1],rango[2]] )
-        elif( funcion_Texto != 'Imp_Esp' ):
-            self.dominio = piecewise(self.t, [self.t,self.t],[rango[0], rango[1],rango[2]] )
+        elif( funcion_Texto == 'Esc_Esp' ):
+            c = []
+            for f1 in self.rango:
+                if(f1 >= 0):
+                    c.append(1)
+                elif(f1<0):
+                    c.append(0)
+            self.dominio = c
 
+        elif( funcion_Texto == 'Imp_Esp' ):
+            c = []
+            for f1 in self.rango:
+                if(f1 == 0):
+                    c.append(1)
+                elif(f1 != 0):
+                    c.append(0)
+            self.dominio = c
 
 
     def imprimir_Funcion (self):
@@ -39,6 +52,7 @@ class Funcion:
         plt.xlabel('t')
         plt.grid(True)
         if tipo == 'd':
+            #print(self.rango)
             markerline, stemlines, baseline = plt.stem(self.rango, self.dominio,markerfmt='o',label=self.funcion_Texto)
             plt.legend()
             plt.setp(stemlines, 'color', plt.getp(markerline,'color'))

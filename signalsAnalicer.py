@@ -230,6 +230,9 @@ class Ui_MainWindow(QtGui.QWidget):
         self.spn_Inv.valueChanged.connect(self.slot_SpinInvercion)
         self.comboBox.activated.connect(self.slot_SeleccionarSignal)
         self.rd_Todas.clicked.connect(self.graficar_Todas)
+        self.chck_Esc.clicked.connect(self.slot_EspEsc)
+        self.chck_Imp.clicked.connect(self.slot_EspImp)
+
 
 
 
@@ -264,6 +267,12 @@ class Ui_MainWindow(QtGui.QWidget):
         self.pushButton_5.setText(_translate("MainWindow", "Save each", None))
         self.pushButton_6.setText(_translate("MainWindow", "Del. Grph", None))
         self.pushButton_7.setText(_translate("MainWindow", "Clean", None))
+
+    def slot_EspEsc(self):
+        self.agregar_FuncionEsc()
+
+    def slot_EspImp(self):
+        self.agregar_FuncionImp()
 
     ## ejecutar slot cuando una funcion sea seleccionada
     def slot_SeleccionarSignal(self):
@@ -336,11 +345,35 @@ class Ui_MainWindow(QtGui.QWidget):
         self.coleccion_Funciones.append(fn)
         self.agregar_Funcion_Combo(fn)
 
-        #plt.legend()
-        #for fni in self.coleccion_Funciones:
-        #    markerline, stemlines, baseline = plt.stem(fni.rango,fni.dominio, markerfmt='o',label=fni.funcion_Texto)
-        #    plt.setp(stemlines, 'color', plt.getp(markerline,'color'))
-        #fn.graficar()
+
+        q = QtGui.QPixmap.fromImage(QtGui.QImage(fn.graficar('graficaPrincipal')))
+        self.label_6.setPixmap(q.scaled(self.label_6.width(), self.label_6.height(),QtCore.Qt.KeepAspectRatio))
+
+    def agregar_FuncionImp(self):
+        ### conseguir los valores del rango
+        rango = [self.spn_Init.value(),self.spn_To.value(),self.spn_Muestras.value() ]
+        idntf = str( self.txt_funcionEntrada.text())
+
+        fn = funcion.Funcion(rango,'Imp_Esp','Imp_Esp')
+
+        ### agregar la funcion a la coleccion_Funciones
+        self.coleccion_Funciones.append(fn)
+        self.agregar_Funcion_Combo(fn)
+
+        q = QtGui.QPixmap.fromImage(QtGui.QImage(fn.graficar('graficaPrincipal')))
+        self.label_6.setPixmap(q.scaled(self.label_6.width(), self.label_6.height(),QtCore.Qt.KeepAspectRatio))
+
+    def agregar_FuncionEsc(self):
+        ### conseguir los valores del rango
+        rango = [self.spn_Init.value(),self.spn_To.value(),self.spn_Muestras.value() ]
+        idntf = str( self.txt_funcionEntrada.text())
+
+        fn = funcion.Funcion(rango,'Esc_Esp','Esc_Esp')
+
+        ### agregar la funcion a la coleccion_Funciones
+        self.coleccion_Funciones.append(fn)
+        self.agregar_Funcion_Combo(fn)
+
         q = QtGui.QPixmap.fromImage(QtGui.QImage(fn.graficar('graficaPrincipal')))
         self.label_6.setPixmap(q.scaled(self.label_6.width(), self.label_6.height(),QtCore.Qt.KeepAspectRatio))
 
