@@ -7,8 +7,8 @@ class Funcion:
 
         ###declarar variables
         self.vals_Rango     = rango
-        self.x              = symbols('x')
-        self.y              = symbols('y')
+        self.t              = symbols('x')
+        self.s              = symbols('y')
         self.funcion_Texto  = funcion_Texto
         self.nombre         = identificador
         self.funcion_Objeto = sympify(funcion_Texto)
@@ -16,12 +16,12 @@ class Funcion:
 
         if( funcion_Texto != 'Esc_Esp' and  funcion_Texto !='Imp_Esc'):
             ### evaluar la funcion en todos los puntos del rango_X
-            f                   = lambdify( self.x, self.funcion_Objeto, 'numpy' )
+            f                   = lambdify( self.t, self.funcion_Objeto, 'numpy' )
             self.dominio        = f(self.rango)
         elif( funcion_Texto != 'Esc_Esp' ):
-            self.dominio = piecewise(self.x, [self.x,self.x],[rango[0], rango[1],rango[2]] )
+            self.dominio = piecewise(self.t, [self.t,self.t],[rango[0], rango[1],rango[2]] )
         elif( funcion_Texto != 'Imp_Esp' ):
-            self.dominio = piecewise(self.x, [self.x,self.x],[rango[0], rango[1],rango[2]] )
+            self.dominio = piecewise(self.t, [self.t,self.t],[rango[0], rango[1],rango[2]] )
 
 
 
@@ -35,6 +35,8 @@ class Funcion:
         print(self.dominio)
 
     def graficar         (self, name='graficaPrincipal', tipo='d'):
+        plt.ylabel('s')
+        plt.xlabel('t')
         plt.grid(True)
         if tipo == 'd':
             markerline, stemlines, baseline = plt.stem(self.rango, self.dominio,markerfmt='o',label=self.funcion_Texto)
@@ -64,7 +66,7 @@ class Funcion:
         ### iterar para cada valor ti en T
         for ti in fn.rango :
             c = ti+t0
-            nuevo_Dominio.append( self.funcion_Objeto.subs(self.x,c) )
+            nuevo_Dominio.append( self.funcion_Objeto.subs(self.t,c) )
         fn.dominio = nuevo_Dominio
         return fn
 
@@ -89,7 +91,7 @@ class Funcion:
 
         ### iterar para cada valor ti en T
         for ti in fn.rango :
-            nuevo_Dominio.append( self.funcion_Objeto.subs(self.x,t0*-1*ti) )
+            nuevo_Dominio.append( self.funcion_Objeto.subs(self.t,t0*-1*ti) )
         fn.dominio = nuevo_Dominio
         return fn
 
@@ -97,7 +99,7 @@ class Funcion:
     def reevaluar_Rango  (self, x):
         r = ["Funcion "+ self.funcion_Texto + " Continua y Discreta"]
         self.rango = x
-        f = lambdify( self.x, self.funcion_Objeto, 'numpy' )
+        f = lambdify( self.t, self.funcion_Objeto, 'numpy' )
         self.dominio =  f(x)
         r.append(self.dominio)
         return r

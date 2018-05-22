@@ -87,7 +87,7 @@ class Ui_MainWindow(QtGui.QWidget):
         self.comboBox = QtGui.QComboBox(self.groupBox)
         self.comboBox.setGeometry(QtCore.QRect(10, 140, 371, 27))
         self.comboBox.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);\n"
-"selection-background-color: rgb(231, 77, 0);"))
+"selection-background-color: rgb(206, 68, 0);"))
         self.comboBox.setObjectName(_fromUtf8("comboBox"))
         self.rd_Actual = QtGui.QRadioButton(self.groupBox)
         self.rd_Actual.setGeometry(QtCore.QRect(10, 170, 141, 22))
@@ -199,25 +199,20 @@ class Ui_MainWindow(QtGui.QWidget):
         self.groupBox_6.setGeometry(QtCore.QRect(810, 560, 391, 111))
         self.groupBox_6.setStyleSheet(_fromUtf8("background-color: rgb(223, 223, 223);"))
         self.groupBox_6.setObjectName(_fromUtf8("groupBox_6"))
-        self.comboBox_7 = QtGui.QComboBox(self.groupBox_6)
-        self.comboBox_7.setGeometry(QtCore.QRect(10, 70, 371, 27))
-        self.comboBox_7.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);\n"
-"selection-background-color: rgb(231, 77, 0);"))
-        self.comboBox_7.setObjectName(_fromUtf8("comboBox_7"))
         self.pushButton_3 = QtGui.QPushButton(self.groupBox_6)
-        self.pushButton_3.setGeometry(QtCore.QRect(20, 20, 71, 41))
+        self.pushButton_3.setGeometry(QtCore.QRect(20, 20, 71, 81))
         self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
         self.pushButton_4 = QtGui.QPushButton(self.groupBox_6)
-        self.pushButton_4.setGeometry(QtCore.QRect(90, 20, 71, 41))
+        self.pushButton_4.setGeometry(QtCore.QRect(90, 20, 71, 81))
         self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
         self.pushButton_5 = QtGui.QPushButton(self.groupBox_6)
-        self.pushButton_5.setGeometry(QtCore.QRect(160, 20, 71, 41))
+        self.pushButton_5.setGeometry(QtCore.QRect(160, 20, 71, 81))
         self.pushButton_5.setObjectName(_fromUtf8("pushButton_5"))
         self.pushButton_6 = QtGui.QPushButton(self.groupBox_6)
-        self.pushButton_6.setGeometry(QtCore.QRect(230, 20, 71, 41))
+        self.pushButton_6.setGeometry(QtCore.QRect(230, 20, 71, 81))
         self.pushButton_6.setObjectName(_fromUtf8("pushButton_6"))
         self.pushButton_7 = QtGui.QPushButton(self.groupBox_6)
-        self.pushButton_7.setGeometry(QtCore.QRect(300, 20, 71, 41))
+        self.pushButton_7.setGeometry(QtCore.QRect(300, 20, 71, 81))
         self.pushButton_7.setObjectName(_fromUtf8("pushButton_7"))
         MainWindow.setCentralWidget(self.centralwidget)
 
@@ -244,7 +239,7 @@ class Ui_MainWindow(QtGui.QWidget):
         self.txt_funcionEntrada.setToolTip(_translate("MainWindow", "<html><head/><body><p>Introduzca Una nueva funcion</p></body></html>", None))
         self.label_2.setText(_translate("MainWindow", "De", None))
         self.label_3.setText(_translate("MainWindow", "Hasta", None))
-        self.label_4.setText(_translate("MainWindow", "Pasos", None))
+        self.label_4.setText(_translate("MainWindow", "Incremento", None))
         self.btn_AddFun.setText(_translate("MainWindow", "+", None))
         self.btn_RemFun.setText(_translate("MainWindow", "-", None))
         self.rd_Actual.setText(_translate("MainWindow", "funcion Actual", None))
@@ -264,11 +259,11 @@ class Ui_MainWindow(QtGui.QWidget):
         self.cmb_Opr.setItemText(2, _translate("MainWindow", "x", None))
         self.cmb_Opr.setItemText(3, _translate("MainWindow", "Combolusion", None))
         self.groupBox_6.setTitle(_translate("MainWindow", "Opciones", None))
-        self.pushButton_3.setText(_translate("MainWindow", "+", None))
-        self.pushButton_4.setText(_translate("MainWindow", "+", None))
-        self.pushButton_5.setText(_translate("MainWindow", "+", None))
-        self.pushButton_6.setText(_translate("MainWindow", "+", None))
-        self.pushButton_7.setText(_translate("MainWindow", "+", None))
+        self.pushButton_3.setText(_translate("MainWindow", "Sava all", None))
+        self.pushButton_4.setText(_translate("MainWindow", "Save act", None))
+        self.pushButton_5.setText(_translate("MainWindow", "Save each", None))
+        self.pushButton_6.setText(_translate("MainWindow", "Del. Grph", None))
+        self.pushButton_7.setText(_translate("MainWindow", "Clean", None))
 
     ## ejecutar slot cuando una funcion sea seleccionada
     def slot_SeleccionarSignal(self):
@@ -401,7 +396,7 @@ class Ui_MainWindow(QtGui.QWidget):
         self.cmb_Inc.addItem(funcionNueva.funcion_Texto)
         self.cmb_Corr.addItem(funcionNueva.funcion_Texto)
         self.cmb_Inv.addItem(funcionNueva.funcion_Texto)
-        self.comboBox_7.addItem(funcionNueva.funcion_Texto)
+        #self.comboBox_7.addItem(funcionNueva.funcion_Texto)
         self.comboBox.addItem(funcionNueva.funcion_Texto)
 
     def reagregar_combos(self):
@@ -411,7 +406,7 @@ class Ui_MainWindow(QtGui.QWidget):
             self.cmb_Inc.addItem(fni.funcion_Texto)
             self.cmb_Corr.addItem(fni.funcion_Texto)
             self.cmb_Inv.addItem(fni.funcion_Texto)
-            self.comboBox_7.addItem(fni.funcion_Texto)
+            #self.comboBox_7.addItem(fni.funcion_Texto)
             self.comboBox.addItem(fni.funcion_Texto)
 
 
@@ -421,7 +416,7 @@ class Ui_MainWindow(QtGui.QWidget):
         self.cmb_Inc.clear()
         self.cmb_Corr.clear()
         self.cmb_Inv.clear()
-        self.comboBox_7.clear()
+        #self.comboBox_7.clear()
         self.comboBox.clear()
 
     ## regresar el indice del valor 0
