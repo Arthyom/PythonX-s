@@ -232,8 +232,27 @@ class Ui_MainWindow(QtGui.QWidget):
         self.rd_Todas.clicked.connect(self.graficar_Todas)
         self.chck_Esc.clicked.connect(self.slot_EspEsc)
         self.chck_Imp.clicked.connect(self.slot_EspImp)
+        self.pushButton_4.clicked.connect(self.slot_SaveCurrentGraphs)
+        self.pushButton_3.clicked.connect(self.slot_SaveAllGraphs)
+        self.pushButton_5.clicked.connect(self.slot_SaveEachGraphs)
 
 
+    def slot_SaveEachGraphs(self):
+        for fn in self.coleccion_Funciones:
+            fn.graficar()
+
+    def slot_SaveCurrentGraphs (self):
+        nombre = QtGui.QFileDialog.getSaveFileName(self,'Salvar grafico', ".png")
+        if nombre:
+            self.label_6.pixmap().save(nombre)
+
+    def slot_SaveAllGraphs (self):
+        plt.clf()
+        for fn in self.coleccion_Funciones:
+            fn.graficar()
+        nombre = QtGui.QFileDialog.getSaveFileName(self,'Salvar grafico', ".png")
+        if nombre:
+            plt.savefig(str(nombre))
 
 
     def retranslateUi(self, MainWindow):
@@ -281,7 +300,6 @@ class Ui_MainWindow(QtGui.QWidget):
         if ( self.rd_Actual.isChecked() ):
             fn = self.buscar_FuncionComoTexto(self.comboBox.currentText())
             self.graficar_FuncionSeleccionada( fn )
-
 
     def remover_Funcion(self):
         fn= str(self.comboBox.currentText())
@@ -441,7 +459,6 @@ class Ui_MainWindow(QtGui.QWidget):
             self.cmb_Inv.addItem(fni.funcion_Texto)
             #self.comboBox_7.addItem(fni.funcion_Texto)
             self.comboBox.addItem(fni.funcion_Texto)
-
 
     def borrar_Cmbx (self):
         self.cmb_F1.clear()

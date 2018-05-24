@@ -7,8 +7,8 @@ class Funcion:
 
         ###declarar variables
         self.vals_Rango     = rango
-        self.t              = symbols('x')
-        self.s              = symbols('y')
+        self.t              = symbols('t')
+        self.s              = symbols('s')
         self.funcion_Texto  = funcion_Texto
         self.nombre         = identificador
         self.funcion_Objeto = sympify(funcion_Texto)
