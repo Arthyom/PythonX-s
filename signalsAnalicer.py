@@ -238,8 +238,8 @@ class Ui_MainWindow(QtGui.QWidget):
 
 
     def slot_SaveEachGraphs(self):
-        plt.clf()
         for fn in self.coleccion_Funciones:
+            plt.clf()
             fn.graficar()
             plt.savefig( fn.funcion_Texto+'.png')
 
