@@ -1,9 +1,13 @@
-import re
+
+from sympy import *
+from sympy.plotting import plot
+import re 
 
 class WflsNumerics(object):
-    ### 
-    def __init__(self):
-        pass
+    def __init__(self, expression = 0):
+        if expression != 0:
+            self.expression = sympify(expression)
+        
 
     ### calculate cofficients of a number
     def factorsOf (self, number ):
@@ -41,8 +45,16 @@ class WflsNumerics(object):
                     roots += 1
         return listRoots
 
+    def plotIndependetExpression(self, expression, fromm, to):
+        x = symbols('x')
+        exp = sympify(expression)
+        plot(exp, (x,fromm,to))
+  
 ## +1x^4+0x^3-10x^2+0x+9
 ## +1x^4+1x^3-19x^2+11x+30
 c = WflsNumerics()
 
-print  c.hornerWfls("+1x^4+1x^3-19x^2+11x+30")
+s =  c.hornerWfls("+1x^4+1x^3-19x^2+11x+30")
+
+print 
+print  c.plotIndependetExpression("+1*x^4+1*x^3-19*x^2+11*x+30", min(s), -min(s) )
