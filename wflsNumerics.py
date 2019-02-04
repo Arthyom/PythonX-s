@@ -7,8 +7,7 @@ class WflsNumerics(object):
     def __init__(self, expression = 0):
         if expression != 0:
             self.expression = sympify(expression)
-        
-
+            
     ### calculate cofficients of a number
     def factorsOf (self, number ):
         factors = []
@@ -26,6 +25,7 @@ class WflsNumerics(object):
         fact1Er = self.factorsOf(coeffs[0])
         fact2Do = self.factorsOf(coeffs[-1])
         factFraccion = []
+
         ### iterate while not find total roots
         while roots < max(pows):
             ### iterate for all factors of the last coefficients
@@ -52,9 +52,9 @@ class WflsNumerics(object):
   
 ## +1x^4+0x^3-10x^2+0x+9
 ## +1x^4+1x^3-19x^2+11x+30
-c = WflsNumerics()
+#c = WflsNumerics()
 
-s =  c.hornerWfls("+1x^4+1x^3-19x^2+11x+30")
+#s =  c.hornerWfls("+1x^4+1x^3-19x^2+11x+30")
 
-print 
-print  c.plotIndependetExpression("+1*x^4+1*x^3-19*x^2+11*x+30", min(s), -min(s) )
+#print  
+#print  c.plotIndependetExpression("+1*x^4+1*x^3-19*x^2+11*x+30", min(s), -min(s) )
