@@ -6,8 +6,67 @@ import re
 class WflsNumerics(object):
     def __init__(self, expression = 0):
         if expression != 0:
+            self.strExpression = expression
             self.expression = sympify(expression)
-            
+            self.x = symbols('x')
+
+    def findSignusChange(self,a,b):       
+        interval = list(range(a,b))
+        subint   = []
+
+        for i,vi in enumerate(interval):
+            if i+1 < len(interval):
+                fa = self.expression.subs(self.x, vi)
+                fb = self.expression.subs(self.x, interval[i+1])
+                if (fa > 0 and fb < 0) or (fa < 0 and fb > 0) or (fa == 0) or (fb == 0):
+                    subint.append([vi, interval[i+1]])
+        return subint
+
+    def getPows(self):
+        pows = map(int, re.findall(r"[x^](\d+)", self.strExpression.replace(' ', '')))
+        return pows
+
+    def getCoefficents(self):
+        coeffs = map(int, re.findall(r"([+-]\d+)", self.strExpression.replace(' ', '')))
+        return coeffs
+
+
+    ### this method asumess that exist an matematic expression    
+    def wflsBissection(self,a,b):
+        subranges = self.findSignusChange(a,b)
+       
+        ### check if there is a signus change in the expression
+        totalRoots = 0; pows = self.getPows(); roots = []; c = 0; i = 0
+        while max(pows) > totalRoots:
+            for a,b in subranges:
+                
+                ### calculate f(a) , f(b)
+                fa = self.expression.subs(self.x, a)
+                fb = self.expression.subs(self.x, b)
+                   
+                ### check if exists a signus change in the interval
+                if (fa >= 0 and fb <= 0) or (fa <= 0 and fb >= 0):
+                    c = (a+b)/2*(1.0)
+                    ### calculate fa . fc, fb . fc
+                    fca = fa * self.expression.subs(self.x, c)
+                    ### check root cases
+                    if   fca > 0: a = c
+                    elif fca < 0: b = c
+                    elif fca == 0:
+                        roots.append(c)
+                        totalRoots += 1
+
+        return roots
+    
+
+
+
+
+
+
+
+
+    
     ### calculate fraction factors
     def fractions(self, lastTerm, firstTerm):
         a = []
@@ -16,6 +75,10 @@ class WflsNumerics(object):
                 s = (1.0*fl)/ft
                 if s not in lastTerm and s not in firstTerm: a.append(s)
         return a 
+
+    def evaluateX(self, val):
+        s =self.expression.subs(self.x, val)
+        return s
 
     ### calculate cofficients of a number
     def factorsOf (self, number ):
@@ -64,14 +127,20 @@ class WflsNumerics(object):
     def plotIndependetExpression(self, expression, fromm, to):
         x = symbols('x')
         exp = sympify(expression)
-        plot(exp, (x,fromm,to))
+        plot(exp, (x,fromm,to), title=expression)
   
 ## +1x^4+0x^3-10x^2+0x+9
-## +1x^4+1x^3-19x^2+11x+30
-## +2x^4+1x^3-8x^2-1x+6
-## +4x^4+9x^3-5x^2+9x-9
-c = WflsNumerics()
+## +1*x^5-25*x^3+1*x^2+0*x-25
+## +1*x^5-25*x^3+1*x^2+0*x-25
+## +1*x^4+1*x^3-19*x^2+11*x+30
+## +2*x^4+1*x^3-8*x^2-1*x+6
+## +4*x^4+9*x^3-5*x^2+9*x-9
+c = WflsNumerics("+1*x^4+1*x^3-19*x^2+11*x+30")
+#print c.evaluateX(-1)
+print c.wflsBissection(-6 , 5)
+#print c.findSignusChange(-6,4)
 
-##s =  c.hornerWfls("+4*x^4+9*x^3-5*x^2+9*x-9")
-##print s
-#c.plotIndependetExpression("+4*x^4+9*x^3-5*x^2+9*x-9", min(s), -min(s) )
+#print c.wflsBissection(-4, -.5)
+print c.hornerWfls("+1*x^4+1*x^3-19*x^2+11*x+30")
+#print s
+#c.plotIndependetExpression("+1*x^4+1*x^3-19*x^2+11*x+30", -7, 7) 
