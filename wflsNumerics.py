@@ -2,6 +2,7 @@
 from sympy import *
 from sympy.plotting import plot
 import re 
+import numpy 
 
 class WflsNumerics(object):
     def __init__(self, expression = 0):
@@ -10,16 +11,20 @@ class WflsNumerics(object):
             self.expression = sympify(expression)
             self.x = symbols('x')
 
-    def findSignusChange(self,a,b):       
-        interval = list(range(a,b))
+    def findSignusChange(self,a,b,x):       
+        interval = list(numpy.arange(a,b,x))
         subint   = []
 
         for i,vi in enumerate(interval):
             if i+1 < len(interval):
                 fa = self.expression.subs(self.x, vi)
                 fb = self.expression.subs(self.x, interval[i+1])
-                if (fa > 0 and fb < 0) or (fa < 0 and fb > 0) or (fa == 0) or (fb == 0):
+                if (fa >= 0 and fb <= 0) or (fa <= 0 and fb >= 0):
                     subint.append([vi, interval[i+1]])
+        
+        
+            
+                        
         return subint
 
     def getPows(self):
@@ -32,14 +37,15 @@ class WflsNumerics(object):
 
 
     ### this method asumess that exist an matematic expression    
-    def wflsBissection(self,a,b):
-        subranges = self.findSignusChange(a,b)
-       
+    def wflsBissection(self,a,b,x, maxIt):
+        subranges = self.findSignusChange(a,b,x)
+        print subranges
         ### check if there is a signus change in the expression
         totalRoots = 0; pows = self.getPows(); roots = []; c = 0; i = 0
-        while max(pows) > totalRoots:
-            for a,b in subranges:
-                
+        
+        for a,b in subranges:
+            i = 0
+            while maxIt > i:
                 ### calculate f(a) , f(b)
                 fa = self.expression.subs(self.x, a)
                 fb = self.expression.subs(self.x, b)
@@ -55,7 +61,8 @@ class WflsNumerics(object):
                     elif fca == 0:
                         roots.append(c)
                         totalRoots += 1
-
+                        break
+                i += 1
         return roots
     
 
@@ -135,12 +142,12 @@ class WflsNumerics(object):
 ## +1*x^4+1*x^3-19*x^2+11*x+30
 ## +2*x^4+1*x^3-8*x^2-1*x+6
 ## +4*x^4+9*x^3-5*x^2+9*x-9
-c = WflsNumerics("+1*x^4+1*x^3-19*x^2+11*x+30")
+c = WflsNumerics("+2*x^4+1*x^3-8*x^2-1*x+6")
 #print c.evaluateX(-1)
-print c.wflsBissection(-6 , 5)
+print c.wflsBissection(-2 ,3 ,1,1)
 #print c.findSignusChange(-6,4)
 
 #print c.wflsBissection(-4, -.5)
-print c.hornerWfls("+1*x^4+1*x^3-19*x^2+11*x+30")
+print c.hornerWfls("+2*x^4+1*x^3-8*x^2-1*x+6")
 #print s
 #c.plotIndependetExpression("+1*x^4+1*x^3-19*x^2+11*x+30", -7, 7) 
