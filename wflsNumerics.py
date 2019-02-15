@@ -10,6 +10,13 @@ class WflsNumerics(object):
             self.strExpression = expression
             self.expression = sympify(expression)
             self.x = symbols('x')
+            self.EA = 1.0e-9
+
+    def getError(self,xNew, xOld):
+        error = 0
+        if xNew != 0:
+            error = abs((xNew - xOld)/(xNew*1.0))*100
+        return error
 
     def findSignusChange(self,a,b,x):       
         interval = list(numpy.arange(a,b,x))
@@ -19,12 +26,8 @@ class WflsNumerics(object):
             if i+1 < len(interval):
                 fa = self.expression.subs(self.x, vi)
                 fb = self.expression.subs(self.x, interval[i+1])
-                if (fa >= 0 and fb <= 0) or (fa <= 0 and fb >= 0):
-                    subint.append([vi, interval[i+1]])
-        
-        
-            
-                        
+                if (fa * fb) <= 0:
+                    subint.append([vi, interval[i+1]]) 
         return subint
 
     def getPows(self):
@@ -35,37 +38,104 @@ class WflsNumerics(object):
         coeffs = map(int, re.findall(r"([+-]\d+)", self.strExpression.replace(' ', '')))
         return coeffs
 
+    ### this method asumess that exist an matematic expression    
+    def wflsRegulaFalsi(self,a,b,x, maxIt):
+        subranges = self.findSignusChange(a,b,x)
+        ### check if there is a signus change in the expression
+        roots = []; c = 0; i = 0; z = 0
+        
+        for a,b in subranges:
+            i = 0
+            ### calculate f(a) , f(b)
+            fa = self.expression.subs(self.x, a)
+            fb = self.expression.subs(self.x, b)
+            ### check if exists a signus change in the interval
+            if (fa * fb <= 0):
+                while maxIt > i:
+                    z = c
+                    c = (a*fb -  (1.0*b)*fa)/(fb - fa)
+                    ### calculate fa . fc, fb . fc
+                    fc = self.expression.subs(self.x, c)
+                    ### check root cases
+                    if fc == 0 or self.getError(c,z) <= self.EA:
+                        ### fc is a solution
+                        if c not in roots:
+                            roots.append(c)
+                            print '.....................'
+                            break
+                    else:
+                        if fa * fb > 0: a = c
+                        else: b = c
+                    i += 1 
+                    
+        return roots
+
+    def wflsSimpleRegulaFalsi(self,a,b, maxIt):
+        ### check if there is a signus change in the expression
+        c = 0; i = 0; z = 0
+        ### calculate f(a) , f(b)
+        fa = self.expression.subs(self.x, a)
+        fb = self.expression.subs(self.x, b)
+        ### check if exists a signus change in the interval
+        if (fa * fb <= 0):
+            while maxIt > i:
+                z = c
+                c = (a*fb -  (1.0*b)*fa)/(fb - fa)
+                ### calculate fa . fc, fb . fc
+                fc = self.expression.subs(self.x, c)
+                ### check root cases
+                if fc == 0 or self.getError(c,z) <= self.EA: return c
+                i += 1
+        return 'nf'
 
     ### this method asumess that exist an matematic expression    
     def wflsBissection(self,a,b,x, maxIt):
         subranges = self.findSignusChange(a,b,x)
-        print subranges
         ### check if there is a signus change in the expression
-        totalRoots = 0; pows = self.getPows(); roots = []; c = 0; i = 0
+        roots = []; c = 0; i = 0; z = 0
         
         for a,b in subranges:
             i = 0
-            while maxIt > i:
-                ### calculate f(a) , f(b)
-                fa = self.expression.subs(self.x, a)
-                fb = self.expression.subs(self.x, b)
-                   
-                ### check if exists a signus change in the interval
-                if (fa >= 0 and fb <= 0) or (fa <= 0 and fb >= 0):
+            ### calculate f(a) , f(b)
+            fa = self.expression.subs(self.x, a)
+            fb = self.expression.subs(self.x, b)
+            ### check if exists a signus change in the interval
+            if (fa * fb <= 0):
+                while maxIt > i:
+                    z = c
                     c = (a+b)/2*(1.0)
                     ### calculate fa . fc, fb . fc
                     fca = fa * self.expression.subs(self.x, c)
                     ### check root cases
                     if   fca > 0: a = c
                     elif fca < 0: b = c
-                    elif fca == 0:
+                    elif fca == 0 or self.getError(c,z) <= self.EA:
                         roots.append(c)
-                        totalRoots += 1
                         break
-                i += 1
+                    i += 1
         return roots
     
 
+
+    def wflsSimpleBissection(self,a,b,maxIt):
+        ### check if there is a signus change in the expression
+        c = 0; i = 0; z = 0
+        ### calculate f(a) , f(b)
+        fa = self.expression.subs(self.x, a)
+        fb = self.expression.subs(self.x, b)
+        ### check if exists a signus change in the interval
+        if (fa * fb <= 0):
+            while maxIt > i:
+                z = c
+                c = (a+b)/(2*(1.0))
+                ### calculate fa . fc, fb . fc
+                fca = fa * self.expression.subs(self.x, c)
+                if fca == 0 or self.getError(c,z) <= self.EA: return c
+                ### check root cases
+                elif   fca > 0: a = c
+                elif   fca < 0: b = c
+                i += 1
+        return 'nf'
 
 
 
@@ -136,18 +206,26 @@ class WflsNumerics(object):
         exp = sympify(expression)
         plot(exp, (x,fromm,to), title=expression)
   
-## +1x^4+0x^3-10x^2+0x+9
+## +1*x^4+0*x^3-10*x^2+0*x+9
 ## +1*x^5-25*x^3+1*x^2+0*x-25
 ## +1*x^5-25*x^3+1*x^2+0*x-25
 ## +1*x^4+1*x^3-19*x^2+11*x+30
 ## +2*x^4+1*x^3-8*x^2-1*x+6
 ## +4*x^4+9*x^3-5*x^2+9*x-9
-c = WflsNumerics("+2*x^4+1*x^3-8*x^2-1*x+6")
-#print c.evaluateX(-1)
-print c.wflsBissection(-2 ,3 ,1,1)
+c = WflsNumerics("1*x^3 - 2*x^2 +1")
+##print c.evaluateX(-1)
+#Sprint c.wflsBissection(-1 ,2 ,.5,100)
+
 #print c.findSignusChange(-6,4)
 
+print c.wflsSimpleRegulaFalsi(-.6 ,-4,100)
+#print c.evaluateX(-1), c.evaluateX(-.5)
+
+print c.wflsSimpleBissection(-.7,-0.5,100)
+
 #print c.wflsBissection(-4, -.5)
-print c.hornerWfls("+2*x^4+1*x^3-8*x^2-1*x+6")
+#print c.hornerWfls("1*x^3 - 2*x^2 +1")
 #print s
 #c.plotIndependetExpression("+1*x^4+1*x^3-19*x^2+11*x+30", -7, 7) 
+
+# 1*x^3 - 2*x^2 +1
