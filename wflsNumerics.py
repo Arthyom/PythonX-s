@@ -1,9 +1,11 @@
 
 from sympy import *
 from sympy.plotting import plot
+from matplotlib import pyplot as plt 
 import re 
 import math
 import numpy 
+import time
 
 class WflsNumerics(object):
     def __init__(self, expression = 0):
@@ -12,9 +14,32 @@ class WflsNumerics(object):
             self.expression = sympify(expression)
             self.x = symbols('x')
             self.EA = 1e-8
+            self.fx = 0
+            self.x = 0
+
 ##################################################################
 ###############          tools functions           ###############
 ##################################################################
+    def evaluateInterval(self, fromm, to, step):
+        x = numpy.arange(fromm, to, step)
+        s = []
+        
+        for xi in x:
+            print self.evaluateX(xi)
+            
+
+    def tableInformation(self, name, i, timeStart, xOld, xNew, error, xi):
+        end = time.time()
+        header =  str(i) +','+str(error)
+
+        self.fileTable = open(name,'a')
+        self.fileTable.write(header)
+        self.fileTable.write('\n')
+    
+        #self.fileTable.write('\n\n')
+
+        self.fileTable.close()
+
     def getError(self,xNew, xOld):
         error = 0
         if xNew != 0:
@@ -65,7 +90,7 @@ class WflsNumerics(object):
         return a 
 
     def evaluateX(self, val):
-        s =self.expression.subs(self.x, val)
+        s = self.expression.evalf(self.x, val)
         return s
 
     ### calculate cofficients of a number
@@ -83,6 +108,75 @@ class WflsNumerics(object):
             maxIt = round( (abs( (math.log(abs(b-a)) - math.log(self.EA))/ math.log(2) )) ,0 )
         return int(maxIt)
 
+##################################################################
+###############       interpolation functions      ###############
+##################################################################S
+
+### it uses the expression entered to generate an a cheby intepolation
+### usign the cheb's polinomial grade that is enteder
+    def divDiferencess(self):
+        s = []; k = []
+        s.append( [self.x] )
+
+        ### calculate differences 
+        for div in s:
+            print div
+            for i, val in enumerate(div):
+                if len(div) >= 2:
+                    if i >= len(div):
+                        si = (self.evaluateX(div[1+i]) - self.evaluateX(div[i]))/div[i+i]-div[i]
+                        k.append(si)
+                    s.append(k)
+
+       
+
+
+    def interpolChebyshev(self,n, fromm, to):
+        coefs = []
+        ### get the chebyshev's nodes o roots 
+        chebsRoots = numpy.polynomial.Chebyshev.basis(n+1).roots()
+        
+        ### calculate the chebyshevs coef's
+        for s in range(0,n+1):
+            sum = 0
+            if s == 0 : 
+                for i,val in enumerate(chebsRoots):
+                    sum += self.expression.subs(self.x,val).evalf()
+                coefs.append( (sum/(n+1.0)) )
+                
+            else:
+                for i,val in enumerate(chebsRoots):
+                    c = math.cos( (s*math.pi* ((2*i+1.0))/(2*n+2.0)) )
+                    sum += self.evaluateX(val) * c
+                coefs.append( abs((2*sum/(n+1.0))) )
+        
+        x,y = numpy.polynomial.Chebyshev(coefs).linspace()
+        return x,y
+
+            
+
+       
+
+
+
+    def chebsHomework(self):
+        ### calculate function values
+        x = numpy.arange(-1,1, 2.0/100)
+        f = lambdify(self.x, self.expression, 'numpy') 
+        y = f(x)
+        plt.plot(x,y, label='f(x)')
+        
+
+        ### calculate chebs values
+        for i in range(4,8):
+            xCheb,yCheb = self.interpolChebyshev(i,-1,1)
+            l = 'P'+str(i)
+            plt.plot(xCheb,yCheb, label=l)
+
+        plt.legend(loc='best')
+        plt.show()
+
+
 
 ##################################################################
 ###############          roots functions           ###############
@@ -93,10 +187,11 @@ class WflsNumerics(object):
         ### check if there is a signus change in the expression
         roots = [];  findedRoots = 0
         for a,b in globalInterval:
-            c = 0; i = 0; z = 0
+            c = 0; i = 1; z = 0
             ### get the maximum number of iterations
             maxIt = 100#self.maxIterations(a,b) +2
             while maxIt >= i:
+                start = time.time()
                 ### calculate f(a) , f(b)
                 fa = self.expression.subs(self.x, a)
                 fb = self.expression.subs(self.x, b)
@@ -107,8 +202,15 @@ class WflsNumerics(object):
                     c = (a+b)/(2*(1.0))
                     ### calculate fa . fc, fb . fc
                     fca = fa * self.expression.subs(self.x, c)
-                    if fca == 0 or self.getError(c,z) <= self.EA :
+                    error = self.getError(c,z)
+                    name = self.strExpression
+                    name = name.replace('*','-')
+                    name = name.replace('^','-')
+                    self.tableInformation('infoBisection'+name+'.txt',i, start, z, c, error,c) 
+                    if fca == 0 or error <= self.EA :
                         if c not in roots and functiongrade > findedRoots :
+                            ###print table information 
+                            
                             roots.append(c)
                             findedRoots += 1
                     ### check root cases
@@ -124,9 +226,10 @@ class WflsNumerics(object):
         roots = [];  findedRoots = 0
         for a,b in globalInterval:
             ###declate variables
-            i = 0; xi = a; xiAnt = 0
-            maxIt = self.maxIterations(a,0)
+            i = 1; xi = a; xiAnt = 0
+            maxIt = 20#self.maxIterations(a,0)
             while maxIt >= i:
+                start = time.time()
                 ###calculate f'(xi) and f(xi)
                 fxi  = self.expression.subs(self.x,xi)
                 dfxi = self.expression.diff(self.x).subs(self.x,xi)
@@ -135,10 +238,15 @@ class WflsNumerics(object):
                 ###calculate new point
                 if dfxi != 0:
                     xi = round( xi - (fxi/dfxi), 8)
+                    error = self.getError(xi,xiAnt)
+                    name = self.strExpression
+                    name = name.replace('*','-')
+                    name = name.replace('^','-')
+                    self.tableInformation('infoNewton'+name+'.txt',i, start, xiAnt, xi, error,xi) 
                 if fxi == 0 or self.getError(xi,xiAnt) <= self.EA:
                     if xi not in roots and functiongrade > findedRoots :
-                            roots.append(xi)
-                            findedRoots += 1
+                        roots.append(xi)
+                        findedRoots += 1
                 i += 1
         return  roots
     
@@ -148,9 +256,11 @@ class WflsNumerics(object):
         ### check if there is a signus change in the expression
         roots = [];  findedRoots = 0
         for a,b in globalInterval:
-            c = 0; i = 0; z = 0
-            maxIt = self.maxIterations(a,b)
+            
+            c = 0; i = 1; z = 0
+            maxIt = 20#self.maxIterations(a,b)
             while maxIt >= i : 
+                start = time.time()
                 ###calculate f(a) = f(xi-1)
                 fa = self.evaluateX(a)
                 ###calculate f(b) = f(xi)
@@ -158,10 +268,18 @@ class WflsNumerics(object):
                 ###save the old c value
                 z = c
                 ###calculate f(c) = f(xi+1)
-                c = b-(fb*(a-b)/(fa-fb))
+                if(fb-fa != 0):
+                    c = a-(fa*(b-a)/(fb - fa))
+                else : c= 0
                 ###check if xi1 is a valid root
+                error = self.getError(c,b)
+                name = self.strExpression
+                name = name.replace('*','-')
+                name = name.replace('^','-')
+                self.tableInformation('infoSecamte'+name+'.txt',i, start, z, c, error,c) 
                 if self.evaluateX(c) == 0 or self.getError(c,b) <= self.EA:
                     if c not in roots and functiongrade > findedRoots :
+                       
                         roots.append(c)
                         findedRoots += 1
                 else:
@@ -175,22 +293,31 @@ class WflsNumerics(object):
         ### check if there is a signus change in the expression
         roots = [];  findedRoots = 0
         for a,b in globalInterval:
-            c = 0; i = 0; z = 0
-            maxIt = self.maxIterations(a,b)
+            c = 0; i = 1; z = 0
+            maxIt = 20#self.maxIterations(a,b)
             ### calculate f(a) , f(b)
             while maxIt >= i:
+                start = time.time()
                 fa = self.expression.subs(self.x, a)
                 fb = self.expression.subs(self.x, b)
 
                 ### check if exists a signus change in the interval
                 if (fa * fb <= 0):
                     z = c
-                    c = a-(fa*(b-a)/(fb - fa))
+                    if(fb-fa != 0):
+                        c = a-(fa*(b-a)/(fb - fa))
+                    else : c= 0
                     ### calculate fa . fc, fb . fc
                     fc = self.expression.subs(self.x, c)
                     ### check root cases
+                    error = self.getError(c,z)
+                    name = self.strExpression
+                    name = name.replace('*','-')
+                    name = name.replace('^','-')
+                    self.tableInformation('infoRegula'+name+'.txt',i, start, z, c, error,c) 
                     if fc*fa == 0 or self.getError(c,z) <= self.EA: 
                         if c not in roots and functiongrade > findedRoots :
+                            
                             roots.append(c)
                             findedRoots += 1
                     else:
@@ -276,7 +403,9 @@ class WflsNumerics(object):
             ### check if exists a signus change in the interval
             if (fa * fb <= 0):
                 z = c
-                c = a-(fa*(b-a)/(fb - fa))
+                if(fb-fa != 0):
+                    c = a-(fa*(b-a)/(fb - fa))
+                else : c= 0
                 ### calculate fa . fc, fb . fc
                 fc = self.expression.subs(self.x, c)
                 ### check root cases
@@ -333,31 +462,32 @@ class WflsNumerics(object):
     def plotExpression(self):
         plot(self.expression )
 
-## +1*x^4+0*x^3-10*x^2+0*x+9
-## +1*x^5-25*x^3+1*x^2+0*x-25
-## +1*x^5-25*x^3+1*x^2+0*x-25
-## +1*x^4+1*x^3-19*x^2+11*x+30
-## +2*x^4+1*x^3-8*x^2-1*x+6
-## +4*x^4+9*x^3-5*x^2+9*x-9
+    def plotExpressioFromTo(self, fromm, to):
+        plot(self.expression, (self.x,fromm,to) )
 
-#####1*x^3 - 2*x^2 +1
 
-c = WflsNumerics("+1*x^4+0*x^3-10*x^2+0*x+9")
-#print c.evaluateX(0.0750794556940274)
-#Sprint c.wflsBissection(-1 ,2 ,.5,100)
+#resultados = [[3,4,0.3,'+2*x^3-11.7*x^2+17.5*x-5']]
 
-#print c.findSignusChange(-6,4)
-a,b,x = -4, 5,1
+#for a,b,x,exp in resultados:
+#    objExp = WflsNumerics(exp)
+#    print( 'Function -> '+ objExp.strExpression)
+#    print( 'Regula  ->: '+ str(objExp.wflsRootsGeneralRegulaFalsi(a,b,x)))
+#    print( 'Bissec  ->: '+ str(objExp.wflsRootsGeneralBissection(a,b,x) ))
+#    print( 'newton  ->: '+ str(objExp.wflsRootsGeneralNewton(a,b,x)))
+#    print( 'secant  ->: '+ str(objExp.wflsRootsGeneralSecante(a,b,x)))
+#    print('\n\n')
+#    objExp.plotExpressioFromTo(a,b)
 
-print 'Regula  ->: '+ str(c.wflsRootsGeneralRegulaFalsi(a,b,x))
-print 'Bissec  ->: '+ str(c.wflsRootsGeneralBissection(a,b,x) )
-print 'newton  ->: '+ str(c.wflsRootsGeneralNewton(-3,b,x))
-print 'secant  ->: '+ str(c.wflsRootsGeneralSecante(a,b,x))
 
-#c.plotExpression()
-#print c.wflsBissection(-4, -.5)
-#print c.hornerWfls("1*x^3 - 2*x^2 +1")
-#print s
-#c.plotIndependetExpression("+1*x^4+1*x^3-19*x^2+11*x+30", -7, 7) 
+#objExp = WflsNumerics('ln(x+2)')
+#objExp = WflsNumerics('exp(x)')
+#objExp = WflsNumerics('cos(x)')
+#objExp = WflsNumerics('(x+2)^(1/2)')
+#objExp = WflsNumerics('(x+2)^(x+2)')
+objExp = WflsNumerics('x+2')
 
-# 1*x^3 - 2*x^2 +1
+#objExp.interpolChebyshev(3,-1,1)
+#objExp.chebsHomework()
+objExp.evaluateInterval(0,6,1)
+#objExp.divDiferencess()
+    
